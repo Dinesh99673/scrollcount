@@ -171,3 +171,10 @@ email placeholder first, then put the resulting URL into
 
 Facebook Reels and Snapchat Spotlight · home screen widget · not counting
 scroll-backs · streaks and goals · hourly heatmap · CSV export.
+
+---
+
+## License
+
+ScrollCount is released under the [MIT License](LICENSE) — free to use, modify
+and distribute, with no warranty.

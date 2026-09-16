@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Placeholder ScrollCount logo: two downward chevrons, the "endless swipe".
+  Replace via File > New > Image Asset when the real logo is ready (Phase 6).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M34,42 L54,60 L74,42"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M34,58 L54,76 L74,58"
+        android:strokeColor="#9B7CFF"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

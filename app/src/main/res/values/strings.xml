@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ScrollCount</string>
+
+    <string name="accessibility_service_label">ScrollCount</string>
+    <string name="accessibility_service_summary">Counts reels and shorts. Reads nothing else.</string>
+    <string name="accessibility_service_description">ScrollCount uses this permission for one purpose only: to notice when a new Reel or Short appears on your screen so it can add 1 to your daily count.\n\nIt never reads, stores or sends messages, captions, usernames, comments or video content. It only works inside Instagram and YouTube. Everything it counts stays on this phone - the app has no internet access at all.</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="channel_limits_name">Daily limit alerts</string>
+    <string name="channel_limits_description">Tells you when you reach half of, or all of, your daily reel limit.</string>
+    <string name="channel_summary_name">Daily summary</string>
+    <string name="channel_summary_description">An evening recap of how much you scrolled today.</string>
+</resources>

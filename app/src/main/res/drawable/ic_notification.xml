@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Notification icons must be a flat white silhouette on transparency - Android
+  throws away any colour and tints them itself. This is the app logo redrawn
+  to that rule.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFF">
+    <path
+        android:pathData="M6,7 L12,12.5 L18,7"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M6,13 L12,18.5 L18,13"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeAlpha="0.65" />
+</vector>

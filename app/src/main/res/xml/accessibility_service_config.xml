@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tells Android exactly how little access ScrollCount needs.
+
+  packageNames limits the service to Instagram and YouTube only - it is never
+  notified about anything you do in any other app, including your keyboard,
+  banking apps or messages.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeViewScrolled|typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds|flagRetrieveInteractiveWindows"
+    android:canRetrieveWindowContent="true"
+    android:description="@string/accessibility_service_description"
+    android:notificationTimeout="100"
+    android:packageNames="com.instagram.android,com.google.android.youtube"
+    android:settingsActivity="com.probuilder.scrollcount.MainActivity"
+    android:summary="@string/accessibility_service_summary" />

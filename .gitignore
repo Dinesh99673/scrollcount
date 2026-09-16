@@ -1,0 +1,17 @@
+*.iml
+.gradle/
+local.properties
+.idea/
+.DS_Store
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+
+# Never commit these. Losing the keystore means you can never update the app
+# on Play Store again, and committing it means anyone can publish as you.
+*.jks
+*.keystore
+keystore.properties

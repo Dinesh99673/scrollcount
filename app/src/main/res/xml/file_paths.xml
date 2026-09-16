@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The only folder ScrollCount ever shares from: the temporary share-card cache. -->
+<paths>
+    <cache-path name="shared_cards" path="shared/" />
+</paths>

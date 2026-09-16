@@ -62,7 +62,9 @@ class ScrollCountService : AccessibilityService() {
         super.onServiceConnected()
         val app = application as? ScrollCountApp
         if (app == null) {
-            Log.w(TAG, "Application is not ScrollCountApp; service cannot record reels.")
+            if (BuildConfig.DEBUG) {
+                Log.w(TAG, "Application is not ScrollCountApp; service cannot record reels.")
+            }
             return
         }
         reelRepository = app.container.reelRepository
@@ -75,7 +77,7 @@ class ScrollCountService : AccessibilityService() {
         }
 
         ScrollCountServiceState.setRunning(true)
-        Log.i(TAG, "ScrollCount service connected.")
+        if (BuildConfig.DEBUG) Log.i(TAG, "ScrollCount service connected.")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -190,10 +192,15 @@ class ScrollCountService : AccessibilityService() {
         registry.resetAll()
         serviceScope.cancel()
         ScrollCountServiceState.setRunning(false)
-        Log.i(TAG, "ScrollCount service destroyed.")
+        if (BuildConfig.DEBUG) Log.i(TAG, "ScrollCount service destroyed.")
     }
 
     private companion object {
+        /**
+         * Only ever used inside BuildConfig.DEBUG checks. A release build of
+         * ScrollCount writes nothing to Logcat at all, not even its own
+         * lifecycle, so there is no trail of when you were watching reels.
+         */
         const val TAG = "ScrollCountService"
 
         /** A single swipe can fire many events; only one reel per 700ms counts. */

@@ -111,12 +111,15 @@ class ScrollCountService : AccessibilityService() {
         }
 
         if (!onReelScreen) {
-            // Just opened the reel player: the first reel is already playing,
-            // so it counts without waiting for a swipe.
             onReelScreen = true
             activeDetector = detector
-            countReel(detector, "opened")
-            return
+            // Only apps that give us no item index count the reel on screen at
+            // the moment the player opens. Where an index is available, that
+            // index counts it instead - see ReelDetector.countsOnScreenEntry.
+            if (detector.countsOnScreenEntry) {
+                countReel(detector, "opened")
+                return
+            }
         }
 
         if (detector.isNewReel(event)) countReel(detector, "swiped")
@@ -203,8 +206,15 @@ class ScrollCountService : AccessibilityService() {
          */
         const val TAG = "ScrollCountService"
 
-        /** A single swipe can fire many events; only one reel per 700ms counts. */
-        const val DEBOUNCE_MS = 700L
+        /**
+         * A single swipe can fire many events, so counts are rate limited.
+         *
+         * This used to be 700ms and was doing most of the work. Now that
+         * Instagram is deduplicated by pager item index, the debounce is only a
+         * backstop, so it can be shorter and stop penalising fast swiping.
+         * YouTube, which has no index, still leans on it.
+         */
+        const val DEBOUNCE_MS = 400L
 
         /** How often the "is this the reel screen" question is asked again. */
         const val SCREEN_RECHECK_MS = 400L

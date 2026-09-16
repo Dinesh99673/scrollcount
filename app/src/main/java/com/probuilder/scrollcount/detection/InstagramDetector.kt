@@ -18,12 +18,27 @@ class InstagramDetector : KeywordReelDetector(
     appName = "Instagram",
 ) {
 
+    // Confirmed against Instagram 446.0.0.49.77 by dumping the view tree on a
+    // real device. Hit counts over a 6-minute session are in the comments.
     override val screenMarkers: List<String> = listOf(
-        "clips_viewer",              // the full-screen reels pager
-        "clips_video_container",     // the video surface inside it
-        "clips_swipe_refresh",       // pull-to-refresh wrapper around the pager
-        "clips_tab",                 // the reels tab host
+        "clips_viewer_view_pager",   // the full-screen reels pager itself (155 hits)
+        "clips_video_container",     // the video surface inside it (152 hits)
     )
+
+    // The reels pager. Verified to report a clean item index per reel: a test
+    // session of 10 swipes produced exactly the sequence 1..10 from this view,
+    // while 181 other scroll events came from android:id/list and are ignored.
+    override val pagerMarkers: List<String> = listOf("clips_viewer_view_pager")
+
+    // Opening the player already produces an index from the pager, so counting
+    // the entry as well would count the first reel twice.
+    override val countsOnScreenEntry: Boolean = false
+
+    // Deliberately NOT markers, even though they contain "clips":
+    //   clips_tab - the Reels button in the bottom navigation bar. It is on
+    //     screen on the home feed too, so matching it made ScrollCount think
+    //     the normal feed was the reel player and count feed scrolling.
+    //   clips_swipe_refresh - does not exist in this version (0 hits).
 
     override val blockingMarkers: List<String> = listOf(
         "reel_viewer",               // Stories, not Reels

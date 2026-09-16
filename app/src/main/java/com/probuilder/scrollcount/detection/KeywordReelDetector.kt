@@ -35,6 +35,27 @@ abstract class KeywordReelDetector(
      */
     protected open val blockingMarkers: List<String> = emptyList()
 
+    /**
+     * Fragments identifying the vertical pager that actually holds the reels.
+     *
+     * This is the fix for the worst bug this app has had. While the reel player
+     * is open, these apps fire scroll events from several other lists at once -
+     * on Instagram, 181 of 218 scroll events in one test session came from
+     * android:id/list, not the reel pager. Counting all of them turned 10 reels
+     * into 34. Only events from the views named here are ever counted.
+     */
+    protected abstract val pagerMarkers: List<String>
+
+    /**
+     * What to do when the pager reports a scroll but no item index.
+     *
+     * Instagram gives a clean index per reel, so an index-less event there is
+     * noise and is ignored. YouTube gives no index at all, so for it an event
+     * from the pager is the only signal available and has to be trusted, with
+     * the service debounce as the only protection against double counting.
+     */
+    protected open val countsIndexlessPagerEvents: Boolean = false
+
     /** Position of the reel that was on screen the last time we looked. */
     private var lastPosition: Int = POSITION_UNKNOWN
 
@@ -48,21 +69,27 @@ abstract class KeywordReelDetector(
     }
 
     override fun isNewReel(event: AccessibilityEvent): Boolean {
-        if (event.eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED) return false
+        val isScroll = event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED
+        // A ViewPager announces a page change as "selected", which some apps
+        // emit even when they emit no scroll event at all.
+        val isSelected = event.eventType == AccessibilityEvent.TYPE_VIEW_SELECTED
+        if (!isScroll && !isSelected) return false
+
+        // The single most important check: did this come from the reel pager,
+        // or from one of the other lists sharing the screen with it?
+        if (!isFromPager(event)) return false
+
         // Reels scroll vertically. Anything moving sideways is a carousel,
         // a tab strip or a swipe between profiles, and must not be counted.
-        if (isHorizontalScroll(event)) return false
+        if (isScroll && isHorizontalScroll(event)) return false
 
         val position = positionOf(event)
-        if (position == POSITION_UNKNOWN) {
-            // The app did not tell us which item it moved to. Treat the scroll
-            // as a new reel and let the service's debounce collapse the burst
-            // of events a single swipe produces.
-            return true
+        if (position != POSITION_UNKNOWN) {
+            val changed = position != lastPosition
+            lastPosition = position
+            return changed
         }
-        val changed = position != lastPosition
-        lastPosition = position
-        return changed
+        return countsIndexlessPagerEvents
     }
 
     override fun onLeftReelScreen() {
@@ -123,6 +150,17 @@ abstract class KeywordReelDetector(
 
     private fun matches(viewId: String, fragments: List<String>): Boolean =
         fragments.any { viewId.contains(it, ignoreCase = true) }
+
+    /** True when the event came from the reel pager itself, not a neighbouring list. */
+    private fun isFromPager(event: AccessibilityEvent): Boolean {
+        if (pagerMarkers.isEmpty()) return true
+        val sourceId = try {
+            event.source?.viewIdResourceName
+        } catch (_: Exception) {
+            null
+        } ?: return false
+        return matches(sourceId, pagerMarkers)
+    }
 
     /**
      * Which item the scrolling container moved to. RecyclerView and ViewPager2

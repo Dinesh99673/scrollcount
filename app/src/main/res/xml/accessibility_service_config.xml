@@ -5,14 +5,24 @@
   packageNames limits the service to Instagram and YouTube only - it is never
   notified about anything you do in any other app, including your keyboard,
   banking apps or messages.
+
+  typeViewSelected was added because YouTube Shorts emits no usable scroll
+  event when you swipe; a ViewPager reports a page change as "selected", which
+  may be the only signal available there. Note what is still NOT subscribed to:
+  typeViewTextChanged and typeViewTextSelectionChanged, the events that carry
+  what you type. Those are deliberately absent.
+
+  notificationTimeout is 0 rather than 100ms because the system drops events of
+  the same type that arrive inside that window, and Shorts fires very few
+  events to begin with.
 -->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes="typeViewScrolled|typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityEventTypes="typeViewScrolled|typeWindowStateChanged|typeWindowContentChanged|typeViewSelected"
     android:accessibilityFeedbackType="feedbackGeneric"
     android:accessibilityFlags="flagReportViewIds|flagRetrieveInteractiveWindows"
     android:canRetrieveWindowContent="true"
     android:description="@string/accessibility_service_description"
-    android:notificationTimeout="100"
+    android:notificationTimeout="0"
     android:packageNames="com.instagram.android,com.google.android.youtube"
     android:settingsActivity="com.probuilder.scrollcount.MainActivity"
     android:summary="@string/accessibility_service_summary" />

@@ -29,14 +29,31 @@ object ViewTreeLogger {
     private const val MAX_DEPTH = 20
     private const val MAX_NODES = 300
 
-    /** One short line per accessibility event. */
+    /**
+     * One short line per accessibility event.
+     *
+     * The source view ID is the important field: it says *which* view scrolled,
+     * which is the only way to tell the reel pager apart from the half-dozen
+     * other lists these apps keep on screen at the same time.
+     *
+     * changeTypes is a bitmask saying what KIND of change happened (subtree,
+     * text, content description). It never contains the text itself.
+     */
     fun logEvent(event: AccessibilityEvent) {
         if (!BuildConfig.DEBUG) return
         val type = AccessibilityEvent.eventTypeToString(event.eventType)
+        val sourceId = try {
+            event.source?.viewIdResourceName
+        } catch (_: Exception) {
+            null
+        } ?: "(none)"
         Log.d(
             TAG,
             "event pkg=${event.packageName} type=$type class=${event.className} " +
-                "fromIndex=${event.fromIndex} toIndex=${event.toIndex} itemCount=${event.itemCount}",
+                "source=$sourceId " +
+                "fromIndex=${event.fromIndex} toIndex=${event.toIndex} itemCount=${event.itemCount} " +
+                "scrollDeltaX=${event.scrollDeltaX} scrollDeltaY=${event.scrollDeltaY} " +
+                "changeTypes=${event.contentChangeTypes}",
         )
     }
 

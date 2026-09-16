@@ -19,6 +19,16 @@ interface ReelDetector {
     val appName: String
 
     /**
+     * Whether opening the reel player should itself count as one reel.
+     *
+     * False for apps whose pager reports an item index as soon as it appears -
+     * that first index already counts the reel on screen, so counting on entry
+     * too would double it. True for apps that give us nothing to go on, where
+     * counting on entry is better than missing the reel entirely.
+     */
+    val countsOnScreenEntry: Boolean
+
+    /**
      * True when the user is currently looking at the full-screen Reels/Shorts
      * player, as opposed to the normal feed, stories, comments or search.
      *

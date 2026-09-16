@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.Typeface
+import androidx.core.graphics.createBitmap
 import com.probuilder.scrollcount.util.Formatting
 import kotlin.math.roundToInt
 
@@ -41,7 +42,7 @@ object ShareCardRenderer {
     private const val SIDE_MARGIN = 110f
 
     fun render(data: ShareCardData): Bitmap {
-        val bitmap = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(WIDTH, HEIGHT)
         val canvas = Canvas(bitmap)
 
         drawBackground(canvas)
